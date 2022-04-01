@@ -5,6 +5,7 @@ import {useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 // import CameraIcon from '@mui/icons-material/PhotoCamera';
+// import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -18,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { IconButton } from '@material-ui/core';
 
 function App() {
 
@@ -117,8 +119,13 @@ function App() {
         <Toolbar>
           {/* <CameraIcon sx={{ mr: 2 }} /> */}
           <Typography variant="h6" color="inherit" noWrap>
-            Album layout
+            dBnB
+
           </Typography>
+          <button style={{align:"right"}} onClick={()=>{test()}}>
+            TEST
+          </button>
+
         </Toolbar>
       </AppBar>
       <main>
