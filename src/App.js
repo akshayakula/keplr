@@ -35,8 +35,8 @@ function App() {
       walletAddress: myAddress,
       encryptionUtils: window.getEnigmaUtils(CHAIN_ID),
     });
-    console.log({address : secretjs})
-    setSecret({address : secretjs})
+    console.log(secretjs.address)
+    setSecret(secretjs.address)
 
   }
 
@@ -54,7 +54,7 @@ function App() {
           test
         </button>
         <p>
-          {secret.walletAddress}
+          {secret}
         </p>
         <a
           className="App-link"
