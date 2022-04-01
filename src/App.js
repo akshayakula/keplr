@@ -13,7 +13,7 @@ function App() {
 
     await window.keplr.experimentalSuggestChain({
       chainId: CHAIN_ID,
-      chainName: "Local Secret Chain",
+      chainName: "Secret Test Net",
       rpc: "https://rpc.pulsar.griptapejs.com",
       rest: "http://testnet.securesecrets.org:1317",
       bip44: {
