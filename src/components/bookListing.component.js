@@ -6,10 +6,24 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DatePicker from "date-fns/format";
 import ReactDOM from "react-dom";
-import MyDatePicker from "./MyDatePicker";
+import TextField from '@mui/material/TextField';
+import DateFnsAdapter from '@mui/lab/AdapterDateFns';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import StaticDateRangePicker from '@mui/lab/StaticDateRangePicker';
+
+// import MyDatePicker from "./MyDatePicker";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 
-
+// function MyDatePicker() {
+//     ;
+//     const handleChange = date => setDate(date);
+  
+//     return ;
+// }
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,17 +42,25 @@ const useStyles = makeStyles(theme => ({
   
 
 export default function BookListingModal({children}) {
-    const [startDate, setStartDate] = useState(new Date());
+    const [date, setDate] = useState(new Date());
     const classes = useStyles();
+    const [endDate, setEndDate] = useState(new Date())
+    const [value, setValue] = React.useState([null, null]);
+
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
+        console.log('opens')
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
     };
+
+    const theme = createTheme();
+
     return (
         <div>
+            <ThemeProvider theme={theme}>
             <Button variant="contained" color="secondary" onClick={handleOpen}>
                 Book It!
             </Button>
@@ -57,16 +79,30 @@ export default function BookListingModal({children}) {
                 <Fade in={open}>
                     <div className={classes.paper}>
                             <h2>Book This Listing</h2>
-                            <form action="/action_page.php">
-                                <label for="fname">Booking Start:</label>
-                                <MyDatePicker/><br/>
-                                <label for="fname">Booking End:</label>
-                                <MyDatePicker/><br/>
-                                <input type="submit" value="Submit"/>
-                            </form>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <StaticDateRangePicker
+                                displayStaticWrapperAs="desktop"
+                                value={value}
+                                onChange={(newValue) => {
+                                setValue(newValue);
+                                }}
+                                renderInput={(startProps, endProps) => (
+                                <React.Fragment>
+                                    <TextField {...startProps} />
+                                    <Box sx={{ mx: 2 }}> to </Box>
+                                    <TextField {...endProps} />
+                                </React.Fragment>
+                                )}
+                            />
+                            </LocalizationProvider>
+                            <br></br>
+                                {/* <TextField id="filled-basic" label="" variant="filled" /> */}
+                                {/* <TextField id="filled-basic" label="Filled" variant="filled" /> */}
+                                <Button  variant="contained" color="secondary" onClick={() => {console.log(value)}}>Submit</Button>
                     </div>
                 </Fade>
             </Modal>
+            </ThemeProvider>
         </div>
     );
 }

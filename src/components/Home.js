@@ -2,6 +2,7 @@ import { SecretNetworkClient } from "secretjs";
 import {useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+// import {useHistory} from 'react';
 // import CameraIcon from '@mui/icons-material/PhotoCamera';
 // import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import Card from '@mui/material/Card';
@@ -16,12 +17,16 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import Link from '@mui/material/Link';
+// import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { IconButton } from '@material-ui/core';
 import React, { useRef } from 'react'
+import { Link } from "react-router-dom";
 import AnimatedModal from "./findListingModal.component";
 import BookListingModal from "./bookListing.component";
+import Logo from "../assets/dbnbWhite.png"
+// import '../assets/splash-screen.css';
+
 
 const mockListings =[[
 
@@ -46,7 +51,8 @@ const mockListings =[[
       images: ["",""],
       price: "100"
     },
-  ],3]
+],3]
+
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -63,8 +69,13 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   }));
+
   
 function Home() {
+
+
+
+
 
 
   let connect = async() => {
@@ -162,6 +173,10 @@ function Home() {
     });
   };
 
+  const toDisputes= () => {
+      console.log('clicked')
+  }
+
 
   //add Listing   
   const getListings = async () =>  {
@@ -180,8 +195,9 @@ function Home() {
       <CssBaseline />
       <AppBar position="static" color="secondary">
         <Toolbar>
+            <img src={Logo} width="200px" noWrap></img>
           <Typography className={classes.title} variant="h4" noWrap>
-            Welcome To dBnB
+            
           </Typography>
 
           {
@@ -191,8 +207,7 @@ function Home() {
                 <Typography className={classes.title} variant="h6">
                   {secret.address}
                 </Typography>
-                
-                <Button variant="outlined"  color="inherit">Manage Disputes</Button>
+                <Button variant="outlined"  color="inherit"><Link style={{ textDecoration: 'none', color: '#FFFF'}} to={"./disputes"}>Manage Disputes</Link></Button>
                 </Stack>
               </div>        
             :
@@ -272,7 +287,7 @@ function Home() {
       {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          dBnB
+          dBnB by Blockchain at Virginia Tech
         </Typography>
         <Typography
           variant="subtitle1"

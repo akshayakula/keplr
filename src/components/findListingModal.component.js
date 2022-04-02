@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+
 const useStyles = makeStyles(theme => ({
     modal: {
         display: 'flex',
@@ -20,6 +23,15 @@ const useStyles = makeStyles(theme => ({
 export default function AnimatedModal() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+
+    const [name, setName] = React.useState("");
+    const [description, setDescription] = React.useState("");
+    const [address, setAddress] = React.useState("");
+    const [images, setImages] = React.useState("");
+    const [price, setPrice] = React.useState("");
+
+
+
     const handleOpen = () => {
         setOpen(true);
     };
@@ -46,19 +58,15 @@ export default function AnimatedModal() {
                 <Fade in={open}>
                     <div className={classes.paper}>
                             <h2>Make a Listing</h2>
-                            <form action="/action_page.php">
-                                <label for="fname">Listing Name:</label>
-                                <input type="text" id="fname" name="fname"/><br/>
-                                <label for="lname">Description:</label>
-                                <input type="text" id="lname" name="lname"/><br/>
-                                <label for="lname">Address:</label>
-                                <input type="text" id="lname" name="lname"/><br/>
-                                <label for="lname">Image Link:</label>
-                                <input type="text" id="lname" name="lname"/><br/>
-                                <label for="lname">Price / Night:</label>
-                                <input type="text" id="lname" name="lname"/><br/>
-                                <input type="submit" value="Submit"/>
-                            </form>
+                            <Stack direction="row" spacing={3}>
+                                <TextField id="filled-basic" label="Name" variant="filled" value={name} onChange={(val) => {setName(val)}}/>
+                                <TextField id="filled-basic" label="Description" variant="filled" value={description} onChange={(val) => {setDescription(val)}} />
+                                <TextField id="filled-basic" label="Address" variant="filled" value={address} onChange={(val) => {setAddress(val)}} />
+                                <TextField id="filled-basic" label="Images" variant="filled"  value={images} onChange={(val) => {setImages(val)}}/>
+                                <TextField id="filled-basic" label="Price" variant="filled" value={price} onChange={(val) => {setPrice(val)}}/>
+                            </Stack>
+                            <br></br>
+                            <Button  variant="contained" color="secondary" onClick={() => {console.log()}}>Submit</Button>
                     </div>
                 </Fade>
             </Modal>
