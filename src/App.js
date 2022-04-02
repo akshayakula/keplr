@@ -17,6 +17,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { IconButton } from '@material-ui/core';
@@ -24,14 +25,31 @@ import React, { useRef } from 'react'
 import AnimatedModal from "./components/findListingModal.component";
 import BookListingModal from "./components/bookListing.component";
 
-
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+    display: 'none',
+    [
+      theme.breakpoints.up('sm')]: {
+        display: 'block',
+    },
+  },
+}));
+  
 
 function App() {
 
 
   let [secret, setSecret] = useState({})
+  const classes = useStyles();
 
-  let test = async() => {
+  let connect = async() => {
     const CHAIN_ID = "pulsar-2";
 
     await window.keplr.experimentalSuggestChain({
@@ -130,17 +148,20 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="relative">
+      <AppBar position="static" color="secondary">
         <Toolbar>
-          {/* <CameraIcon sx={{ mr: 2 }} /> */}
-          <Typography variant="h6" color="inherit" noWrap>
-            dBnB
-
+          <Typography className={classes.title} variant="h4" noWrap>
+            Welcome To dBnB
           </Typography>
-          <button onClick={()=>{test()}}>
-            TEST
-          </button>
 
+          {
+            secret.address ?          
+              <Typography className={classes.title} variant="h6" noWrap>
+                {secret.address}
+              </Typography>
+            :
+            <Button variant="outlined" onClick={()=>{connect()}}  color="inherit">Connect</Button>
+          }
         </Toolbar>
       </AppBar>
       <main>
@@ -171,7 +192,7 @@ function App() {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained" className="link" onClick={scrollDown}>Find a Listing</Button>
+              <Button variant="contained" className="link" onClick={scrollDown} color="secondary">Find a Listing</Button>
               <AnimatedModal />
             </Stack>
           </Container>
