@@ -21,6 +21,9 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { IconButton } from '@material-ui/core';
 import React, { useRef } from 'react'
+import AnimatedModal from "./components/findListingModal.component";
+import BookListingModal from "./components/bookListing.component";
+
 
 
 function App() {
@@ -169,7 +172,7 @@ function App() {
               justifyContent="center"
             >
               <Button variant="contained" className="link" onClick={scrollDown}>Find a Listing</Button>
-              <Button variant="outlined">Make a Listing</Button>
+              <AnimatedModal />
             </Stack>
           </Container>
         </Box>
@@ -200,7 +203,7 @@ function App() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">Book It!</Button>
+                    <BookListingModal/>
                   </CardActions>
                 </Card>
               </Grid>
