@@ -20,6 +20,8 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { IconButton } from '@material-ui/core';
+import React, { useRef } from 'react'
+
 
 function App() {
 
@@ -112,6 +114,16 @@ function App() {
   // The benefit of this is that `secretjs.query.getTx()` will be able to decrypt
   // the response across sessions.
 
+  const aboutSection = useRef(null);
+
+  const scrollDown = () => {
+    window.scrollTo({
+      top: aboutSection.current.offsetTop,
+      behavior: 'smooth',
+    });
+  };
+
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -122,7 +134,7 @@ function App() {
             dBnB
 
           </Typography>
-          <button style={{align:"right"}} onClick={()=>{test()}}>
+          <button onClick={()=>{test()}}>
             TEST
           </button>
 
@@ -145,12 +157,10 @@ function App() {
               color="text.primary"
               gutterBottom
             >
-              Album layout
+              Decentralized Airbnb
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Something short and leading about the collection below—its contents,
-              the creator, etc. Make it short and sweet, but not too short so folks
-              don&apos;t simply skip over it entirely.
+              No Fees. No Hassles. Safe and Secure. 
             </Typography>
             <Stack
               sx={{ pt: 4 }}
@@ -158,11 +168,12 @@ function App() {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained">Main call to action</Button>
-              <Button variant="outlined">Secondary action</Button>
+              <Button variant="contained" className="link" onClick={scrollDown}>Find a Listing</Button>
+              <Button variant="outlined">Make a Listing</Button>
             </Stack>
           </Container>
         </Box>
+        <div className="section section2" ref={aboutSection}>
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
@@ -182,27 +193,26 @@ function App() {
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      NYC Penthouse
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
+                      5 Bedroom<br/>3 Bathroom<br/>$125/day
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">View</Button>
-                    <Button size="small">Edit</Button>
+                    <Button size="small">Book It!</Button>
                   </CardActions>
                 </Card>
               </Grid>
             ))}
           </Grid>
         </Container>
+        </div>
       </main>
       {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          Footer
+          dBnB
         </Typography>
         <Typography
           variant="subtitle1"
@@ -210,7 +220,7 @@ function App() {
           color="text.secondary"
           component="p"
         >
-          Something here to give the footer a purpose!
+          All Rights Reserved.
         </Typography>
       </Box>
       {/* End footer */}
