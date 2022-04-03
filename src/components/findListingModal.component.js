@@ -59,11 +59,11 @@ export default function AnimatedModal() {
                     <div className={classes.paper}>
                             <h2>Make a Listing</h2>
                             <Stack direction="row" spacing={3}>
-                                <TextField id="filled-basic" label="Name" variant="filled" value={name} onChange={(val) => {setName(val)}}/>
-                                <TextField id="filled-basic" label="Description" variant="filled" value={description} onChange={(val) => {setDescription(val)}} />
-                                <TextField id="filled-basic" label="Address" variant="filled" value={address} onChange={(val) => {setAddress(val)}} />
-                                <TextField id="filled-basic" label="Images" variant="filled"  value={images} onChange={(val) => {setImages(val)}}/>
-                                <TextField id="filled-basic" label="Price" variant="filled" value={price} onChange={(val) => {setPrice(val)}}/>
+                                <TextField id="filled-basic" label="Name" variant="filled" value={name} onChange={(val) => {setName(val.value)}}/>
+                                <TextField id="filled-basic" label="Description" variant="filled" value={description} onChange={(val) => {setDescription(val.value)}} />
+                                <TextField id="filled-basic" label="Address" variant="filled" value={address} onChange={(val) => {setAddress(val.value)}} />
+                                <TextField id="filled-basic" label="Images" variant="filled"  value={images} onChange={(val) => {setImages(val.value)}}/>
+                                <TextField id="filled-basic" label="Price" variant="filled" value={price} onChange={(val) => {setPrice(val.value)}}/>
                             </Stack>
                             <br></br>
                             <Button  variant="contained" color="secondary" onClick={() => {console.log()}}>Submit</Button>
