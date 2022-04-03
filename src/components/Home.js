@@ -1,5 +1,5 @@
-import { SecretNetworkClient } from "secretjs";
-import {useState} from 'react';
+import {SecretNetworkClient} from "secretjs";
+import React, {useRef, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 // import {useHistory} from 'react';
@@ -16,27 +16,20 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 // import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { IconButton } from '@material-ui/core';
-import React, { useRef } from 'react'
-import { Link } from "react-router-dom";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {Link} from "react-router-dom";
 import AnimatedModal from "./findListingModal.component";
 import BookListingModal from "./bookListing.component";
 import Logo from "../assets/dbnbWhite.png"
 // import '../assets/splash-screen.css';
-import { bounce } from 'react-animations'
-import Radium, {StyleRoot} from 'radium';
-
-const styles = {
-  bounce: {
-    animation: 'x 1s',
-    animationName: Radium.keyframes(bounce, 'bounce')
-  }
-}
 
 
+const DBnB = "secret13ms9s4jfkzzrw780vwjaumchxu7vg4rpx9uspr";
+const DBnBCH = "3408653022b1302f51ae7e70fdbaab71d3aab1b20c331010016dcdc604d7f909";
+
+console.log(DBnB, DBnBCH)
 
 const mockListings =[[
 
@@ -80,22 +73,20 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-  
+
 function Home() {
-
-
-
-
-
+  let [secret, setSecret] = useState({});
+  let [listings, setListings] = useState([]);
+  let [confirms, setConfirms] = useState([])
 
   let connect = async() => {
-    const CHAIN_ID = "pulsar-2";
+    const CHAIN_ID = "secretdev-1";
 
     await window.keplr.experimentalSuggestChain({
       chainId: CHAIN_ID,
       chainName: "Secret Test Net",
-      rpc: "https://rpc.pulsar.griptapejs.com",
-      rest: "http://testnet.securesecrets.org:1317",
+      rpc: "http://localhost:26657",
+      rest: "http://localhost:1317",
       bip44: {
         coinType: 529,
       },
@@ -146,22 +137,23 @@ function Home() {
     ){
       await sleep(100);
     }
-    
-    
+
+
     await window.keplr.enable(CHAIN_ID);
-    
+
     const keplrOfflineSigner = window.getOfflineSignerOnlyAmino(CHAIN_ID);
     const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
-    
-    const secretjs = await SecretNetworkClient.create({
-      grpcWebUrl: "http://rpc.pulsar.griptapejs.com:9091",
+    console.log(keplrOfflineSigner)
+
+    SecretNetworkClient.create({
+      grpcWebUrl: "http://localhost:9091",
       chainId: CHAIN_ID,
       wallet: keplrOfflineSigner,
       walletAddress: myAddress,
-      encryptionUtils: window.getEnigmaUtils(CHAIN_ID),
-    });
-    console.log(secretjs.address)
-    setSecret(secretjs)
+    }).then(sjs => {
+      console.log(sjs)
+      setSecret(sjs)
+    })
 
   }
 
@@ -173,45 +165,76 @@ function Home() {
   // Keplr to use the same encryption seed across sessions for the account.
   // The benefit of this is that `secretjs.query.getTx()` will be able to decrypt
   // the response across sessions.
-
   const aboutSection = useRef(null);
+  const scrollDown = async () => {
+    await getListings()
 
-  const scrollDown = () => {
     window.scrollTo({
       top: aboutSection.current.offsetTop,
       behavior: 'smooth',
     });
   };
-
   const toDisputes= () => {
-      console.log('clicked')
+    console.log('clicked')
   }
-
-
-  //add Listing   
+  //add Listing
   const getListings = async () =>  {
+
     const res = await secret.query.compute.queryContract({
-      addres: "",
-      codeHash: "",
-      query: ""
+      address: DBnB,
+      codeHash: DBnBCH,
+      query: {get_listings: {page: 0, page_size: 50}}
     })
 
-  }
+    let vk_response = await secret.tx.compute.executeContract({
+      sender: secret.address,
+      contract: DBnB,
+      codeHash: DBnBCH,
+      msg: {
+        create_viewing_key: {
+          entropy: "FcGrrhubIpDn2fVYAqmQmKYl+Fj2wpPoWSMGc/mspHI="
+        }
+      }
+    }, {
+      gasLimit: 50000
+    })
+    console.log("p", vk_response)
+    const decoder = new TextDecoder();
+    const vk1 = JSON.parse(decoder.decode(vk_response.data[0].buffer))
 
-  let [secret, setSecret] = useState({})
+    const test = {
+      get_confirmations: {
+        page: 0,
+        page_size: 50,
+        address: secret.address,
+        vk: vk1.create_viewing_key.key
+      }
+    }
+    console.log(test);
+    const confirmations = await secret.query.compute.queryContract({
+      address: DBnB,
+      codeHash: DBnBCH,
+      query: test
+    })
+    console.log(res);
+    setListings(res[0]);
+    console.log(confirmations)
+    setConfirms(confirmations.Ok)
+
+  }
   const classes = useStyles();
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppBar position="static" color="secondary">
         <Toolbar>
-        <StyleRoot>
-            <img src={Logo} width="200px" style={styles.bounce}  alt="no alt" noWrap></img>
-        </StyleRoot> 
+            <img src={Logo} width="200px" noWrap></img>
           <Typography className={classes.title} variant="h4" noWrap>
+
           </Typography>
+
           {
-            secret.address ?  
+            secret.address ?
               <div>
                 <Stack direction="row" spacing={2}>
                 <Typography className={classes.title} variant="h6">
@@ -219,7 +242,7 @@ function Home() {
                 </Typography>
                 <Button variant="outlined"  color="inherit"><Link style={{ textDecoration: 'none', color: '#FFFF'}} to={"./disputes"}>Manage Disputes</Link></Button>
                 </Stack>
-              </div>        
+              </div>
             :
             <Button variant="outlined" onClick={()=>{connect()}}  color="inherit">Connect</Button>
           }
@@ -230,11 +253,11 @@ function Home() {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            pt: 30,
-            pb: 30,
+            pt: 8,
+            pb: 6,
           }}
         >
-          <Container maxWidth="lg">
+          <Container maxWidth="sm">
             <Typography
               component="h1"
               variant="h2"
@@ -245,7 +268,7 @@ function Home() {
               Decentralized Airbnb
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              No Fees. No Hassles. Safe and Secure. 
+              No Fees. No Hassles. Safe and Secure.
             </Typography>
             <Stack
               sx={{ pt: 4 }}
@@ -254,7 +277,7 @@ function Home() {
               justifyContent="center"
             >
               <Button variant="contained" className="link" onClick={scrollDown} color="secondary">Find a Listing</Button>
-              <AnimatedModal />
+              <AnimatedModal props={secret} />
             </Stack>
           </Container>
         </Box>
@@ -262,7 +285,7 @@ function Home() {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {mockListings[0].map((item) => (
+            {listings.map((item, i) => (
               <Grid item key={item} xs={12} sm={6} md={4}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -271,7 +294,7 @@ function Home() {
                     component="img"
                     sx={{
                       // 16:9
-                      pt: '50.25px',
+                      pt: '56.25%',
                     }}
                     image="https://source.unsplash.com/random"
                     alt="random"
@@ -281,11 +304,23 @@ function Home() {
                       {item.name}
                     </Typography>
                     <Typography>
-                      {item.price}<br/>3 Bathroom<br/>$125/day
+                      {item.price}$<br/>{item.description}
                     </Typography>
+
+                    {
+                      confirms.map(e => {
+                        if(e.id === item.id){
+                          console.log("pppppppp")
+                          return <Typography gutterBottom variant="h5" component="h2">
+                                      Date: {e.start} to {e.end}
+                                  </Typography>
+                        }
+                      })
+                    }
+
                   </CardContent>
                   <CardActions>
-                    <BookListingModal/>
+                    <BookListingModal props={[item, confirms, setConfirms, secret]}/>
                   </CardActions>
                 </Card>
               </Grid>
@@ -313,4 +348,3 @@ function Home() {
   );
 }
 export default Home;
-    

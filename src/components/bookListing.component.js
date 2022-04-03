@@ -21,7 +21,7 @@ import Box from '@mui/material/Box';
 // function MyDatePicker() {
 //     ;
 //     const handleChange = date => setDate(date);
-  
+
 //     return ;
 // }
 
@@ -39,12 +39,24 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(2, 4, 3),
     },
 }));
-  
 
-export default function BookListingModal({children}) {
-    const [date, setDate] = useState(new Date());
+
+
+export default function BookListingModal(children) {
+    const DBnB = "secret13ms9s4jfkzzrw780vwjaumchxu7vg4rpx9uspr";
+    const DBnBCH = "3408653022b1302f51ae7e70fdbaab71d3aab1b20c331010016dcdc604d7f909";
+    console.log(children)
+
+    // let item = children[0]
+
+    // let confirms = children[1]
+
+    // children[2] = setter
+
+
+    // const [date, setDate] = useState(new Date());
     const classes = useStyles();
-    const [endDate, setEndDate] = useState(new Date())
+    // const [endDate, setEndDate] = useState(new Date())
     const [value, setValue] = React.useState([null, null]);
 
     const [open, setOpen] = React.useState(false);
@@ -80,11 +92,12 @@ export default function BookListingModal({children}) {
                     <div className={classes.paper}>
                             <h2>Book This Listing</h2>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
+
                             <StaticDateRangePicker
                                 displayStaticWrapperAs="desktop"
                                 value={value}
                                 onChange={(newValue) => {
-                                setValue(newValue);
+                                    setValue(newValue);
                                 }}
                                 renderInput={(startProps, endProps) => (
                                 <React.Fragment>
@@ -95,10 +108,22 @@ export default function BookListingModal({children}) {
                                 )}
                             />
                             </LocalizationProvider>
-                            <br></br>
-                                {/* <TextField id="filled-basic" label="" variant="filled" /> */}
-                                {/* <TextField id="filled-basic" label="Filled" variant="filled" /> */}
-                                <Button  variant="contained" color="secondary" onClick={() => {console.log(value)}}>Submit</Button>
+                            <br/><br/>
+                                <Button  variant="contained" color="secondary" onClick={async () => { console.log(DBnB, DBnBCH, children.props[0].id); const t = await children.props[3].tx.compute.executeContract({
+                                    sender: children.props[3].address,
+                                    contract: DBnB,
+                                    codeHash: DBnBCH,
+                                    msg: {
+                                        confirm_listing: {
+                                            id: children.props[0].id,
+                                            start: value[0].getTime() / 1000,
+                                            end: value[1].getTime() / 1000
+                                        }
+                                    }
+                                }, {
+                                    gasLimit: 75000
+                                })
+                                }}>Submit</Button>
                     </div>
                 </Fade>
             </Modal>

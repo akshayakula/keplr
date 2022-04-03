@@ -7,6 +7,10 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
+
+const DBnB = "secret13ms9s4jfkzzrw780vwjaumchxu7vg4rpx9uspr";
+const DBnBCH = "3408653022b1302f51ae7e70fdbaab71d3aab1b20c331010016dcdc604d7f909";
+
 const useStyles = makeStyles(theme => ({
     modal: {
         display: 'flex',
@@ -20,7 +24,7 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(2, 4, 3),
     },
 }));
-export default function AnimatedModal() {
+export default function AnimatedModal(children) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -59,14 +63,36 @@ export default function AnimatedModal() {
                     <div className={classes.paper}>
                             <h2>Make a Listing</h2>
                             <Stack direction="row" spacing={3}>
-                                <TextField id="filled-basic" label="Name" variant="filled" value={name} onChange={(val) => {setName(val.value)}}/>
-                                <TextField id="filled-basic" label="Description" variant="filled" value={description} onChange={(val) => {setDescription(val.value)}} />
-                                <TextField id="filled-basic" label="Address" variant="filled" value={address} onChange={(val) => {setAddress(val.value)}} />
-                                <TextField id="filled-basic" label="Images" variant="filled"  value={images} onChange={(val) => {setImages(val.value)}}/>
-                                <TextField id="filled-basic" label="Price" variant="filled" value={price} onChange={(val) => {setPrice(val.value)}}/>
+                                <TextField id="filled-basic" label="Name" variant="filled" value={name} onChange={(val) => {console.log(val.target.value); setName(val.target.value)}}/>
+                                <TextField id="filled-basic" label="Description" variant="filled" value={description} onChange={(val) => {setDescription(val.target.value)}} />
+                                <TextField id="filled-basic" label="Address" variant="filled" value={address} onChange={(val) => {setAddress(val.target.value)}} />
+                                <TextField id="filled-basic" label="Images" variant="filled"  value={images} onChange={(val) => {setImages(val.target.value)}}/>
+                                <TextField id="filled-basic" label="Price" variant="filled" value={price} onChange={(val) => {setPrice(val.target.value)}}/>
                             </Stack>
                             <br></br>
-                            <Button  variant="contained" color="secondary" onClick={() => {console.log()}}>Submit</Button>
+                            <Button  variant="contained" color="secondary" onClick={async () => {
+                                // console.log(children)
+                                const v = name;
+                                const v1 = description;
+                                const v2 = address;
+                                const v3 = price;
+
+                                await children.props.tx.compute.executeContract({
+                                    sender: children.props.address,
+                                    contract: DBnB,
+                                    codeHash: DBnBCH,
+                                    msg: { add_listing: {
+                                            name: v,
+                                            description: v1,
+                                            address: v2,
+                                            images: [],
+                                            price: v3
+                                        }
+                                    }
+                                }, {
+                                    gasLimit: 75000
+                                });
+                            }}>Submit</Button>
                     </div>
                 </Fade>
             </Modal>
