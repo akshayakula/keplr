@@ -26,6 +26,16 @@ import AnimatedModal from "./findListingModal.component";
 import BookListingModal from "./bookListing.component";
 import Logo from "../assets/dbnbWhite.png"
 // import '../assets/splash-screen.css';
+import { bounce } from 'react-animations'
+import Radium, {StyleRoot} from 'radium';
+
+const styles = {
+  bounce: {
+    animation: 'x 1s',
+    animationName: Radium.keyframes(bounce, 'bounce')
+  }
+}
+
 
 
 const mockListings =[[
@@ -195,11 +205,11 @@ function Home() {
       <CssBaseline />
       <AppBar position="static" color="secondary">
         <Toolbar>
-            <img src={Logo} width="200px" noWrap></img>
+        <StyleRoot>
+            <img src={Logo} width="200px" style={styles.bounce}  alt="no alt" noWrap></img>
+        </StyleRoot> 
           <Typography className={classes.title} variant="h4" noWrap>
-            
           </Typography>
-
           {
             secret.address ?  
               <div>
@@ -220,11 +230,11 @@ function Home() {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
+            pt: 30,
+            pb: 30,
           }}
         >
-          <Container maxWidth="sm">
+          <Container maxWidth="lg">
             <Typography
               component="h1"
               variant="h2"
@@ -261,7 +271,7 @@ function Home() {
                     component="img"
                     sx={{
                       // 16:9
-                      pt: '56.25%',
+                      pt: '50.25px',
                     }}
                     image="https://source.unsplash.com/random"
                     alt="random"

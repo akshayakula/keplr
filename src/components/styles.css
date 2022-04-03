@@ -1,5 +1,39 @@
-.App {
-    font-family: sans-serif;
-    text-align: center;
+:root {--scrollPosition:0}
+
+@keyframes leftFork {
+  0% {
+      -webkit-transform:rotate(900deg);
+      left:150vw
   }
+  100% {
+      left:46.25vw;
+  }
+}
+
+@keyframes shiftLeftFork {
+    0% {
+        left: 46.25vw
+    }
+    100%{
+        left: 35.25vw;
+    }
+}
+
+@keyframes disappear{
+  0%{
+      opacity: 100%;
+  }
+  100%{
+      opacity: 0%;
+  }
+}
+
+#leftFork {
+  width: 3vw;
+  position: fixed;
+  top: calc((1 - var(--scrollPosition))*8vw + var(--scrollPosition)*-142vw);
+  left: 150vw;
+  animation: leftFork 1.5s ease-out, shiftLeftFork 1s 2.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
   
